@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://dbuser:DbP@ssw0rd2024@db:5432/gamedb
+      - MONGO_URI=mongodb://admin:P@ssw0rd123!@mongo:27017/laberinto_db
+      - REDIS_URL=redis://:RedisP@ss2024!@redis:6379
+      - SECRET_KEY=django-insecure-k8%h@n#j$7x9m2w!p5q&r*t4v6y8z0a1c3e5g7i9k1m3o5q7s9
+      - AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+      - AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      - STRIPE_SECRET_KEY=sk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890
+      - SENDGRID_API_KEY=SG.xK9mP2nQ4rT6vY8zA1bC3dE5fG7hI9jK0lM1nO2pQ3rS4tU5vW6xY7zA8bC9dE0f
+    depends_on:
+      - db
+      - mongo
+      - redis
+    
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=DbP@ssw0rd2024
+      - POSTGRES_DB=gamedb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  mongo:
+    image: mongo:6
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=P@ssw0rd123!
+      - MONGO_INITDB_DATABASE=laberinto_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+  
+  redis:
+    image: redis:7
+    command: redis-server --requirepass RedisP@ss2024!
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
